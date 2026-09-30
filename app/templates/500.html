@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ title|default("500") }}{% endblock %}
+{% block public %}
+<div class="auth-page">
+  <div class="auth-card">
+    <p class="muted mono">500</p>
+    <h1>{{ title|default("Server error") }}</h1>
+    <p class="sub">{{ message|default("Something went wrong.") }}</p>
+    <a class="btn btn-primary" href="{{ url_for('dashboard.index') }}">Back to home</a>
+  </div>
+</div>
+{% endblock %}

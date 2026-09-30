@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% set shell = 'app' %}
+{% block title %}Security{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Security check</h1><p>Reuse is checked on the server; no plaintext passwords are sent to your browser.</p></div>
+  <button class="btn" type="button" id="rerun">Run check again</button>
+</div>
+
+<div class="panel">
+  <div class="health">
+    <div class="ring" id="ring" data-pct="{{ report.health }}"><div><span><b id="health-num">{{ report.health }}%</b><small>health</small></span></div></div>
+    <div>
+      <h2>Recommendations</h2>
+      <ul class="reco" id="reco">
+        {% for tip in report.recommendations %}<li>{{ tip }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat"><div class="n" data-stat="total">{{ report.total }}</div><div class="l">Total credentials</div></div>
+  <div class="stat ok"><div class="n" data-stat="strong">{{ report.strong }}</div><div class="l">Strong</div></div>
+  <div class="stat bad"><div class="n" data-stat="weak">{{ report.weak }}</div><div class="l">Weak</div></div>
+  <div class="stat warn"><div class="n" data-stat="reused">{{ report.reused }}</div><div class="l">Reused</div></div>
+</div>
+
+<div class="two-col">
+  <div class="panel">
+    <h2>Weak passwords <span class="muted">({{ report.weak }})</span></h2>
+    {% if report.weak_items %}<ul class="issue-list">{% for i in report.weak_items %}
+      <li><span>{{ i.title }}<span class="muted"> {{ i.username or '' }}</span></span><a href="{{ url_for('vault.edit', item_id=i.id) }}">Fix</a></li>{% endfor %}</ul>
+    {% else %}<div class="muted">None. Nice.</div>{% endif %}
+  </div>
+  <div class="panel">
+    <h2>Reused passwords <span class="muted">({{ report.reused }})</span></h2>
+    {% if report.reused_items %}<ul class="issue-list">{% for i in report.reused_items %}
+      <li><span>{{ i.title }}<span class="muted"> {{ i.username or '' }}</span></span><a href="{{ url_for('vault.edit', item_id=i.id) }}">Change</a></li>{% endfor %}</ul>
+    {% else %}<div class="muted">No two entries share a password.</div>{% endif %}
+  </div>
+</div>
+<div class="panel">
+  <h2>Old passwords <span class="muted">({{ report.old }})</span></h2>
+  {% if report.old_items %}<ul class="issue-list">{% for i in report.old_items %}
+    <li><span>{{ i.title }}<span class="muted"> {{ i.username or '' }}</span></span><a href="{{ url_for('vault.edit', item_id=i.id) }}">Update</a></li>{% endfor %}</ul>
+  {% else %}<div class="muted">Everything has been changed recently.</div>{% endif %}
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/security.js') }}"></script>{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set shell = 'app' %}
+{% block title %}Generator{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Password generator</h1><p>Generated on the server with a cryptographically secure random source.</p></div></div>
+<div class="gen-layout">
+  <div class="panel">
+    <div class="output" id="gen-output" aria-live="polite">…</div>
+    <div class="meter" id="gen-meter" data-level="weak"><span></span></div>
+    <div class="entropy"><span id="gen-label">&nbsp;</span><span id="gen-entropy"></span></div>
+    <div class="gen-actions">
+      <button class="btn btn-primary" type="button" id="gen-go">Generate</button>
+      <button class="btn" type="button" id="gen-copy">Copy</button>
+      <button class="btn" type="button" id="gen-save">Save to vault</button>
+    </div>
+  </div>
+  <form class="panel" id="gen-form">
+    <div class="tabs" role="tablist" id="gen-tabs">
+      <button type="button" class="on" data-mode="random">Random</button>
+      <button type="button" data-mode="memorable">Memorable</button>
+      <button type="button" data-mode="pin">PIN</button>
+    </div>
+    <div class="field" id="opt-length">
+      <label for="length">Length</label>
+      <div class="range-row"><input type="range" id="length" min="8" max="64" value="20"><output id="length-out">20</output></div>
+    </div>
+    <div class="field" id="opt-words" hidden>
+      <label for="words">Words</label>
+      <div class="range-row"><input type="range" id="words" min="3" max="8" value="6"><output id="words-out">6</output></div>
+    </div>
+    <div class="opts" id="opt-chars">
+      <label class="check"><input type="checkbox" id="upper" checked> Uppercase A-Z</label>
+      <label class="check"><input type="checkbox" id="lower" checked> Lowercase a-z</label>
+      <label class="check"><input type="checkbox" id="digits" checked> Numbers 0-9</label>
+      <label class="check"><input type="checkbox" id="symbols" checked> Special characters</label>
+    </div>
+    <label class="check"><input type="checkbox" id="ambiguous"> Exclude ambiguous characters (O 0 I l 1)</label>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/generator.js') }}"></script>{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block public %}
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Welcome back</h1>
+    <p class="sub">Sign in to open your vault.</p>
+    {% if error %}<div class="auth-alert" role="alert">{{ error }}</div>{% endif %}
+    <form method="post" id="login-form" autocomplete="on" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="identifier">Username or email</label>
+        <input class="input" id="identifier" name="identifier" autocomplete="username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="pw-wrap">
+          <input class="input" type="password" id="password" name="password" autocomplete="current-password" required>
+          <button class="toggle" type="button" data-toggle-pw>Show</button>
+        </div>
+      </div>
+      <div class="row-between">
+        <label class="check"><input type="checkbox" name="remember" value="1"> Remember me</label>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit"><span class="spinner"></span>Sign in</button>
+    </form>
+    <p class="auth-foot">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

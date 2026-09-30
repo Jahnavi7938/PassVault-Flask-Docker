@@ -1,0 +1,50 @@
+<form id="item-form" class="form-narrow" novalidate
+      data-mode="{{ 'edit' if item else 'add' }}"{% if item %} data-id="{{ item.id }}"{% endif %}>
+  <div class="field">
+    <label for="title">Website / application</label>
+    <input class="input" id="title" name="title" maxlength="120" required value="{{ item.title if item else '' }}" placeholder="e.g. GitHub">
+    <div class="error-text" data-err="title"></div>
+  </div>
+  <div class="field">
+    <label for="website_url">Website URL</label>
+    <input class="input" id="website_url" name="website_url" maxlength="500" value="{{ (item.website_url or '') if item else '' }}" placeholder="https://github.com">
+    <div class="error-text" data-err="website_url"></div>
+  </div>
+  <div class="grid-2">
+    <div class="field">
+      <label for="username">Username / email</label>
+      <input class="input" id="username" name="username" maxlength="255" autocomplete="off" value="{{ (item.username or '') if item else '' }}">
+      <div class="error-text" data-err="username"></div>
+    </div>
+    <div class="field">
+      <label for="category">Category</label>
+      <select class="input" id="category" name="category">
+        {% for c in categories %}<option{% if item and item.category == c %} selected{% elif not item and c == 'Other' %} selected{% endif %}>{{ c }}</option>{% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="field">
+    <label for="password">Password</label>
+    <div class="pw-wrap">
+      <input class="input mono" type="password" id="password" name="password" maxlength="1024" autocomplete="new-password"
+             {% if item %}placeholder="Leave blank to keep the current password"{% else %}required{% endif %}>
+      <button class="toggle" type="button" data-toggle-pw>Show</button>
+    </div>
+    <div class="meter" id="pw-meter" data-level="weak"><span></span></div>
+    <div class="meter-label" id="pw-label">{% if item %}Currently {{ item.strength }}. Type to replace it.{% else %}Type a password or generate one.{% endif %}</div>
+    <div class="error-text" data-err="password"></div>
+    <div class="form-actions">
+      <button class="btn btn-sm" type="button" id="gen-btn">Generate password</button>
+    </div>
+  </div>
+  <div class="field">
+    <label for="notes">Notes</label>
+    <textarea class="input" id="notes" name="notes" maxlength="2000">{{ notes if notes else '' }}</textarea>
+    <div class="hint">Notes are encrypted too.</div>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit" id="save-btn"><span class="spinner"></span>{{ 'Save changes' if item else 'Save password' }}</button>
+    <a class="btn btn-ghost" href="{{ url_for('vault.index') }}">Cancel</a>
+    {% if item %}<span class="spacer"></span><button class="btn btn-danger" type="button" id="delete-btn">Delete</button>{% endif %}
+  </div>
+</form>

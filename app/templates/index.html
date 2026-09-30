@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Secure Your Digital Life{% endblock %}
+{% block public %}
+<section class="hero">
+  <div class="floaters" aria-hidden="true">
+    <span><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+    <span><svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M11 12l10-10M17 6l3 3M14 9l2 2"/></svg></span>
+    <span><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+    <span><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span>
+  </div>
+  <div class="container hero-grid">
+    <div class="hero-in">
+      <h1>Secure Your Digital Life</h1>
+      <p class="lead">PassVault keeps your logins in one encrypted vault and helps you replace the weak, reused ones with passwords that are actually random. Everything is generated and decrypted on the server you run - nothing is sent to a third party.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#preview">Generate Password</a>
+        {% if current_user.is_authenticated %}
+          <a class="btn" href="{{ url_for('dashboard.home') }}">Go to dashboard</a>
+        {% else %}
+          <a class="btn" href="{{ url_for('auth.register') }}">Get Started</a>
+          <a class="btn btn-ghost" href="{{ url_for('auth.login') }}">Login</a>
+        {% endif %}
+      </div>
+      <p class="hero-note">Free to run, open to read. No tracking scripts, no external fonts.</p>
+    </div>
+
+    <div class="card-glass hero-in" id="preview">
+      <div class="label">Try the generator</div>
+      <div class="preview-out" id="hero-out" aria-live="polite">Generating…</div>
+      <div class="meter" id="hero-meter" data-level="weak"><span></span></div>
+      <div class="meter-label" id="hero-label">&nbsp;</div>
+      <div class="preview-row">
+        <button class="btn" type="button" id="hero-regen">New password</button>
+        <button class="btn btn-primary" type="button" id="hero-copy">Copy</button>
+      </div>
+      <p class="hint">Created by the server with Python's <code>secrets</code> module. It isn't saved anywhere.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>What it does, and what protects it</h2>
+      <p class="muted">A small password manager built around a few plain decisions rather than a long feature list.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature"><h3>Encrypted at rest</h3><p>Saved passwords and notes are stored as Fernet tokens (AES with an HMAC). The database never contains a readable password.</p></div>
+      <div class="feature"><h3>A key for every user</h3><p>Each account gets its own encryption key, derived from a server secret and a per-user salt. One user's key can't open another's data.</p></div>
+      <div class="feature"><h3>Reveal on request</h3><p>The vault list only ever contains masked dots. A password is decrypted for a single request when you press Reveal, then hidden again.</p></div>
+      <div class="feature"><h3>Real randomness</h3><p>The generator uses the operating system's secure random source and guarantees each character type you ask for appears.</p></div>
+      <div class="feature"><h3>Guarded sign-in</h3><p>Hashed login passwords, CSRF tokens on every change, rate limiting, temporary lockout, and identical error messages for unknown users and wrong passwords.</p></div>
+      <div class="feature"><h3>Health checks</h3><p>Spot weak, reused and stale passwords. Reuse is detected on the server, so plaintext never reaches the browser to do it.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-head"><h2>How it works</h2></div>
+    <div class="steps">
+      <div class="step"><h3>Make an account</h3><p>Choose a strong login password (12+ characters). It's hashed with scrypt and never stored as text.</p></div>
+      <div class="step"><h3>Generate or add</h3><p>Let PassVault generate a password, or type your own. Either way it's encrypted before it touches the database.</p></div>
+      <div class="step"><h3>Find and use</h3><p>Search the vault, reveal or copy a password when you need it. The clipboard is cleared after a short delay.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="architecture">
+  <div class="container">
+    <div class="section-head"><h2>Security architecture</h2><p class="muted">Two separate paths. Your login password is never used as an encryption key.</p></div>
+    <div class="arch">
+      <div class="arch-flow">
+        <h3>Signing in</h3>
+        <ol><li>login password</li><li>scrypt hash (Werkzeug)</li><li>users.password_hash</li></ol>
+        <p>One-way. Even PassVault can't recover your login password.</p>
+      </div>
+      <div class="arch-flow">
+        <h3>Saving a credential</h3>
+        <ol><li>site password</li><li>Fernet, per-user key (HKDF)</li><li>vault_items.encrypted_password</li></ol>
+        <p>Reversible on purpose, because you need the password back. The key lives in <code>.env</code>, not in the database.</p>
+      </div>
+    </div>
+    <p class="honest">This is a self-hosted app, not an audited product. Whoever controls the server's <code>.env</code> and database can decrypt vault data, and a compromised browser can still read what you reveal. The README spells out the model and its limits.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container"><span>PassVault - a self-hosted password manager.</span><span>Built with Flask and SQLite.</span></div>
+</footer>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/generator.js') }}"></script>{% endblock %}

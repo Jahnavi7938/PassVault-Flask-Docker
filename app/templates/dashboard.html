@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% set shell = 'app' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1 id="greeting" data-name="{{ current_user.full_name.split()[0] }}">Welcome back, {{ current_user.full_name.split()[0] }}</h1>
+    <p>Here's where your passwords stand today.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('vault.add') }}">Add password</a>
+</div>
+
+<div class="stat-grid">
+  <div class="stat ok"><div class="n">{{ report.strong }}</div><div class="l">Strong passwords</div></div>
+  <div class="stat bad"><div class="n">{{ report.weak }}</div><div class="l">Weak passwords</div></div>
+  <div class="stat"><div class="n">{{ report.total }}</div><div class="l">Total credentials{% if added_this_week %} ({{ added_this_week }} new this week){% endif %}</div></div>
+  <div class="stat {{ 'ok' if report.health >= 70 else 'warn' if report.health >= 40 else 'bad' }}"><div class="n">{{ report.health if report.total else '-' }}{% if report.total %}%{% endif %}</div><div class="l">Security score</div></div>
+</div>
+
+<div class="panel">
+  <h2>Quick actions</h2>
+  <div class="quick">
+    <a class="btn" href="{{ url_for('generator.page') }}">Generate password</a>
+    <a class="btn" href="{{ url_for('vault.add') }}">Add password</a>
+    <a class="btn" href="{{ url_for('vault.index') }}">View vault</a>
+    <a class="btn" href="{{ url_for('security.page') }}">Security check</a>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Recently added</h2>
+  {% if recent %}
+  <div class="vault-list recent-list">
+    {% for it in recent %}
+    <div class="vrow" data-item="{{ it.id }}">
+      <div class="who">
+        <div class="avatar" data-name="{{ it.title }}">{{ it.title[:1]|upper }}</div>
+        <div><div class="t">{{ it.title }}</div><div class="u">{{ it.username or 'No username' }}</div></div>
+      </div>
+      <div class="pwcell">
+        <span class="mask" data-mask>••••••••••••</span>
+        <div class="when">Added {{ it.created_at.strftime('%d %b %Y') }} · Updated {{ it.updated_at.strftime('%d %b %Y') }}</div>
+      </div>
+      <div class="str-cell"><span class="badge badge-{{ it.strength }}">{{ it.strength|capitalize }}</span></div>
+      <div class="actions">
+        <button class="btn btn-sm" type="button" data-reveal="{{ it.id }}">Reveal</button>
+        <button class="btn btn-sm" type="button" data-copy="{{ it.id }}">Copy</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">Nothing saved yet. <a href="{{ url_for('vault.add') }}">Add your first password</a> or <a href="{{ url_for('generator.page') }}">generate one</a>.</div>
+  {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>{% endblock %}

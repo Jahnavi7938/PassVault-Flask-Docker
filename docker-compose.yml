@@ -1,0 +1,11 @@
+services:
+  passvault:
+    build: .
+    container_name: passvault
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - ./instance:/app/instance
+    restart: unless-stopped

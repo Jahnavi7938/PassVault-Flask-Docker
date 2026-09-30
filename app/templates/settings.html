@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% set shell = 'app' %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Settings</h1><p>These preferences live in this browser only. No passwords are ever stored here.</p></div></div>
+<div class="panel form-narrow">
+  <div class="setting">
+    <div><b>Theme</b><p class="muted">Dark is the default.</p></div>
+    <select class="input" id="set-theme"><option value="dark">Dark</option><option value="light">Light</option></select>
+  </div>
+  <div class="setting">
+    <div><b>Auto-lock after inactivity</b><p class="muted">Locks the vault until you re-enter your password.</p></div>
+    <select class="input" id="set-lock">
+      <option value="0">Never</option><option value="1">1 minute</option><option value="5">5 minutes</option>
+      <option value="15">15 minutes</option><option value="30">30 minutes</option>
+    </select>
+  </div>
+  <div class="setting">
+    <div><b>Revealed password stays visible for</b></div>
+    <select class="input" id="set-reveal">
+      <option value="5">5 seconds</option><option value="10">10 seconds</option>
+      <option value="15">15 seconds</option><option value="30">30 seconds</option>
+    </select>
+  </div>
+  <div class="setting">
+    <div><b>Clear clipboard after copying</b><p class="muted">Where the browser allows it.</p></div>
+    <select class="input" id="set-clip">
+      <option value="10">10 seconds</option><option value="20">20 seconds</option>
+      <option value="30">30 seconds</option><option value="60">60 seconds</option>
+    </select>
+  </div>
+</div>
+<div class="panel form-narrow">
+  <h2>Session</h2>
+  <p class="muted">You're signed in as <b>{{ current_user.username }}</b>. Sessions end after {{ lifetime }} minutes of inactivity.</p>
+  <div class="quick">
+    <button class="btn" type="button" data-action="lock-now">Lock vault now</button>
+    <form method="post" action="{{ url_for('auth.logout') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn-danger" type="submit">Log out of this session</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

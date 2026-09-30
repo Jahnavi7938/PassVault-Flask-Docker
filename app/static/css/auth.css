@@ -1,0 +1,15 @@
+/* login / register / unlock */
+.auth-page { min-height: calc(100vh - 64px); display: grid; place-items: center; padding: 2.5rem 1rem; position: relative; }
+.auth-page::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(40% 40% at 50% 0%, rgba(108, 140, 255, .18), transparent 70%); }
+.auth-card { width: min(440px, 100%); background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow); }
+.auth-card.wide { width: min(520px, 100%); }
+.auth-card h1 { font-size: 1.6rem; margin-bottom: .3rem; }
+.auth-card .sub { color: var(--muted); margin-bottom: 1.5rem; }
+.auth-alert { background: rgba(240, 98, 95, .1); border: 1px solid rgba(240, 98, 95, .4); color: var(--bad); padding: .7rem .9rem; border-radius: var(--r); margin-bottom: 1.1rem; font-size: .93rem; }
+.auth-foot { text-align: center; color: var(--muted); font-size: .93rem; margin: 1.3rem 0 0; }
+.row-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+.rules { list-style: none; padding: 0; margin: .7rem 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: .2rem .8rem; font-size: .82rem; color: var(--muted); }
+.rules li::before { content: "○ "; }
+.rules li.met { color: var(--ok); }
+.rules li.met::before { content: "● "; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .9rem; }

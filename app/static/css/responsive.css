@@ -1,0 +1,44 @@
+@media (max-width: 1000px) {
+  .hero-grid, .gen-layout, .two-col, .arch { grid-template-columns: 1fr; }
+  .feature-grid, .steps { grid-template-columns: 1fr 1fr; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .vrow { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) auto; }
+  .vrow .cat, .vrow .str-cell { display: none; }
+}
+
+@media (max-width: 800px) {
+  /* public nav collapses */
+  .nav-toggle { display: block; }
+  .nav-links { position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: .2rem; background: var(--panel); border-bottom: 1px solid var(--line); padding: .8rem 4%; display: none; }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: .55rem 0; }
+  .hero { padding: 3.5rem 0 3rem; }
+
+  /* app shell becomes a top bar + slide-in drawer */
+  .app { grid-template-columns: 1fr; }
+  .mobilebar { display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 40; background: var(--glass); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); padding: .6rem 1rem; }
+  .sidebar { position: fixed; z-index: 60; inset: 0 auto 0 0; width: 260px; transform: translateX(-105%); transition: transform .22s ease; }
+  .sidebar.open { transform: none; box-shadow: var(--shadow); }
+  .scrim { position: fixed; inset: 0; z-index: 55; background: rgba(4, 7, 16, .6); }
+  .health { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .reco { text-align: left; width: 100%; }
+}
+
+@media (max-width: 640px) {
+  .feature-grid, .steps, .grid-2 { grid-template-columns: 1fr; }
+  .rules { grid-template-columns: 1fr; }
+  .stat .n { font-size: 1.6rem; }
+  .main { padding-top: 1.3rem; }
+  .output { font-size: 1.15rem; }
+  .auth-card { padding: 1.4rem; }
+  .setting { flex-direction: column; align-items: flex-start; }
+
+  /* vault table -> cards */
+  .vrow, .recent-list .vrow { grid-template-columns: 1fr; gap: .55rem; }
+  .vrow .cat, .vrow .str-cell { display: flex; gap: .4rem; }
+  .actions { justify-content: flex-start; }
+  .actions .btn { flex: 1; }
+  .dl { grid-template-columns: 1fr; gap: .1rem; }
+  .dl dd { margin-bottom: .6rem; }
+}
+.drawer-btn { display: block; }

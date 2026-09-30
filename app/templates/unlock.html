@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Vault locked{% endblock %}
+{% block public %}
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Vault locked</h1>
+    <p class="sub">Signed in as <b>{{ current_user.username }}</b>. Enter your password to keep going.</p>
+    {% if error %}<div class="auth-alert" role="alert">{{ error }}</div>{% endif %}
+    <form method="post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="pw-wrap">
+          <input class="input" type="password" id="password" name="password" autocomplete="current-password" required autofocus>
+          <button class="toggle" type="button" data-toggle-pw>Show</button>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Unlock</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

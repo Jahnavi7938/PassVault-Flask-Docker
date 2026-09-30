@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% set shell = 'app' %}
+{% block title %}Vault{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Vault</h1><p id="vault-count">Loading…</p></div>
+  <a class="btn btn-primary" href="{{ url_for('vault.add') }}">Add password</a>
+</div>
+<div class="vault-toolbar">
+  <input class="input" type="search" id="q" placeholder="Search by website, username or category" aria-label="Search vault" autocomplete="off">
+  <select class="input" id="cat" aria-label="Category">
+    <option value="">All categories</option>
+    {% for c in categories %}<option>{{ c }}</option>{% endfor %}
+  </select>
+</div>
+<div class="chips" id="chips">
+  <button class="chip on" type="button" data-filter="all">All</button>
+  <button class="chip" type="button" data-filter="strong">Strong</button>
+  <button class="chip" type="button" data-filter="medium">Medium</button>
+  <button class="chip" type="button" data-filter="weak">Weak</button>
+  <button class="chip" type="button" data-filter="recent">Recently added</button>
+</div>
+<div class="vault-list" id="vault-list" aria-live="polite"></div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/vault.js') }}"></script>{% endblock %}

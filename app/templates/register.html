@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block public %}
+<div class="auth-page">
+  <div class="auth-card wide">
+    <h1>Create your account</h1>
+    <p class="sub">Your login password protects access to PassVault. Pick something you don't use anywhere else.</p>
+    <form method="post" id="register-form" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="full_name">Full name</label>
+        <input class="input {{ 'is-invalid' if errors.full_name }}" id="full_name" name="full_name" value="{{ form.full_name }}" autocomplete="name" required>
+        {% if errors.full_name %}<div class="error-text">{{ errors.full_name }}</div>{% endif %}
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="username">Username</label>
+          <input class="input {{ 'is-invalid' if errors.username }}" id="username" name="username" value="{{ form.username }}" autocomplete="username" required>
+          {% if errors.username %}<div class="error-text">{{ errors.username }}</div>{% endif %}
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input class="input {{ 'is-invalid' if errors.email }}" type="email" id="email" name="email" value="{{ form.email }}" autocomplete="email" required>
+          {% if errors.email %}<div class="error-text">{{ errors.email }}</div>{% endif %}
+        </div>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="pw-wrap">
+          <input class="input {{ 'is-invalid' if errors.password }}" type="password" id="password" name="password" autocomplete="new-password" required>
+          <button class="toggle" type="button" data-toggle-pw>Show</button>
+        </div>
+        <div class="meter" id="pw-meter" data-level="weak"><span></span></div>
+        <div class="meter-label" id="pw-label">Type a password to see how it scores.</div>
+        <ul class="rules" id="pw-rules">
+          <li data-rule="len">12+ characters</li><li data-rule="upper">Uppercase letter</li>
+          <li data-rule="lower">Lowercase letter</li><li data-rule="digit">A number</li>
+          <li data-rule="special">Special character</li>
+        </ul>
+        {% if errors.password %}<div class="error-text">{{ errors.password }}</div>{% endif %}
+      </div>
+      <div class="field">
+        <label for="confirm_password">Confirm password</label>
+        <input class="input {{ 'is-invalid' if errors.confirm_password }}" type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" required>
+        <div class="error-text" id="confirm-msg">{{ errors.confirm_password or '' }}</div>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit"><span class="spinner"></span>Create account</button>
+    </form>
+    <p class="auth-foot">Already registered? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

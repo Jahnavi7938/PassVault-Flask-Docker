@@ -1,0 +1,76 @@
+{% from "_icons.html" import icon %}
+{% set shell = shell|default('public') %}
+{% set ep = request.endpoint or '' %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="robots" content="noindex">
+  <title>{% block title %}PassVault{% endblock %} - PassVault</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% if shell == 'app' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">{% endif %}
+  {% if shell == 'public' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">{% endif %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+</head>
+<body data-auth="{{ '1' if current_user.is_authenticated else '0' }}">
+
+{% if shell == 'app' %}
+<div class="mobilebar">
+  <a class="brand" href="{{ url_for('dashboard.home') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="">PassVault</a>
+  <button class="nav-toggle drawer-btn" id="drawer-toggle" aria-label="Menu">{{ icon('menu') }}</button>
+</div>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="{{ url_for('dashboard.home') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="">PassVault</a>
+    <nav class="side-nav">
+      <a href="{{ url_for('dashboard.home') }}" class="{{ 'active' if ep == 'dashboard.home' }}">{{ icon('grid') }}Dashboard</a>
+      <a href="{{ url_for('vault.index') }}" class="{{ 'active' if ep.startswith('vault.') }}">{{ icon('lock') }}Vault</a>
+      <a href="{{ url_for('generator.page') }}" class="{{ 'active' if ep == 'generator.page' }}">{{ icon('zap') }}Generator</a>
+      <a href="{{ url_for('security.page') }}" class="{{ 'active' if ep == 'security.page' }}">{{ icon('shield') }}Security</a>
+      <a href="{{ url_for('profile.profile') }}" class="{{ 'active' if ep == 'profile.profile' }}">{{ icon('user') }}Profile</a>
+      <a href="{{ url_for('profile.settings') }}" class="{{ 'active' if ep == 'profile.settings' }}">{{ icon('sliders') }}Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="side-user">{{ current_user.username }}</div>
+      <button class="side-btn" type="button" data-action="lock-now">{{ icon('key') }}Lock vault</button>
+      <form method="post" action="{{ url_for('auth.logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="side-btn" type="submit">{{ icon('logout') }}Logout</button>
+      </form>
+    </div>
+  </aside>
+  <main class="main">{% block content %}{% endblock %}</main>
+</div>
+{% else %}
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="{{ url_for('dashboard.index') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="">PassVault</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">{{ icon('menu') }}</button>
+    <nav class="nav-links" id="nav-links">
+      <a href="{{ url_for('dashboard.index') }}">Home</a>
+      <a href="{{ url_for('dashboard.index') }}#features">Features</a>
+      {% if current_user.is_authenticated %}
+        <a class="btn btn-primary btn-sm" href="{{ url_for('dashboard.home') }}">Open dashboard</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Login</a>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('auth.register') }}">Register</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+{% block public %}{% endblock %}
+{% endif %}
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<ul id="flash-data" hidden>
+  {%- for category, message in get_flashed_messages(with_categories=true) %}<li data-cat="{{ category }}">{{ message }}</li>{% endfor -%}
+</ul>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
