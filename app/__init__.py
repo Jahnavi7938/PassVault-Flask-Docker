@@ -75,8 +75,8 @@ def create_app(overrides=None):
 
     register_hooks(app)
 
-    with app.app_context():
-        db.create_all()
+   # with app.app_context():
+       # db.create_all()
 
     return app
 
