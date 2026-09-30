@@ -2,6 +2,12 @@
 
 A small, self-hosted password manager and password generator. Flask + SQLite on the back end; plain HTML, CSS and JavaScript on the front end.
 
+## 🌐 Live Demo
+
+🚀 **Visit the live website:**
+
+👉 [**PassVault – Live Website**](https://passvault-flask-docker.onrender.com/)
+
 ## Overview
 
 You register an account, sign in, and get a personal vault. You can generate strong passwords or write your own, store them encrypted, search them, reveal or copy them when you need them, and check the vault for weak, reused and stale passwords. Every user only ever sees their own records.
